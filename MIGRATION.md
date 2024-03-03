@@ -1,6 +1,6 @@
-How can I migrate a Docker container from one Kubernetes cluster to another Kubernetes cluster? Do I need to connect them via network? Can I use USB memory stick?
+QUESTION: How can I migrate a Docker container from one Kubernetes cluster to another Kubernetes cluster? Do I need to connect them via network? Can I use USB memory stick?
 
-ChatGPT
+ChatGPT Answer:\
 Migrating a Docker container (or more accurately, the workloads running in containers) from one Kubernetes cluster to another involves several steps and considerations. The migration process typically doesn't involve direct container-to-container transfers (like you might with files on a USB stick) but rather focuses on redeploying the application in the new cluster. Here's how you can approach this:
 
 Step 1: Save Your Container Image
