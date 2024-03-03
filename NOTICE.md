@@ -1,5 +1,5 @@
 Apache-2.0 PAIAssistantWeb
-Copyright 2024 Shad Nygren
+Copyright 2024 Shad Nygren / Virtual Hipster
 
 This product includes software developed at https://github.com/ShadNygren/PAIAssistantWeb
 
