@@ -115,5 +115,5 @@ useopenai=true
 
 ## 📝 License
 
-This project is [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) licensed.
+This project is [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) licensed.
 
