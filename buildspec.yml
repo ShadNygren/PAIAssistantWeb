@@ -2,27 +2,81 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_REPO_NAME: "aws-docker-PAIAssistantWeb"
+    IMAGE_REPO_NAME: "paiassistantweb"
     IMAGE_TAG: "experimental"
-    AWS_ACCOUNT_ID: ""
+    AWS_ACCOUNT_ID: "365024520127"
     AWS_DEFAULT_REGION: "us-west-2"
 
 phases:
   install:
-    runtime-versions:
-      docker: 20
+    #runtime-versions:
+    #  docker: 20
+    commands:
+      - cat /etc/issue
+      - uname -a
+      - whoami
+      - pwd
+      - apt update && apt upgrade -y
+      - apt -y install ca-certificates curl wget unzip gnupg iptables dbus-user-session
+      - curl --version
+      - python --version
+      - apt-cache search libcurl | grep python
+      - apt -y install python3-pycurl
+      - echo Installing Docker
+      - # Add Docker's official GPG key:
+      - install -m 0755 -d /etc/apt/keyrings
+      - #curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      - #chmod a+r /etc/apt/keyrings/docker.asc
+      - # Add the repository to Apt sources:
+      - #echo 'deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu  $(. /etc/os-release && echo "$VERSION_CODENAME") stable' | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      - #echo 'deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable' | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      - #echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu/jammy/stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      - #echo "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu/dists/jammy/stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      - #cat /etc/apt/sources.list.d/docker.list
+      - #apt update
+#      - #apt -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+#      - #wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/containerd.io_1.6.28-1_amd4.deb
+#      - wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/containerd.io_1.6.28-1_amd64.deb
+#      - wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-buildx-plugin_0.12.1-1~ubuntu.22.04~jammy_amd64.deb
+#      - #wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce-cli_25.0.3-1~ubuntu~jammy.amd64.deb
+#      - wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce-cli_25.0.3-1~ubuntu.22.04~jammy_amd64.deb
+#      - #wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce-rootless-extras_25.0.3-1~ubuntu.22-04~jammy_amd64.deb
+#      - wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce-rootless-extras_25.0.3-1~ubuntu.22.04~jammy_amd64.deb
+#      - #wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce.25.0.3-1~ubuntu.22.04~jammy_amd64.deb
+#      - wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-ce_25.0.3-1~ubuntu.22.04~jammy_amd64.deb
+#      - wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-compose-plugin_2.24.6-1~ubuntu.22.04~jammy_amd64.deb
+#      - wget https://download.docker.com/linux/ubuntu/dists/jammy/pool/stable/amd64/docker-scan-plugin_0.23.0~ubuntu-jammy_amd64.deb
+#      - dpkg -i containerd.io_1.6.28-1_amd64.deb
+#      - dpkg -i docker-ce-cli_25.0.3-1~ubuntu.22.04~jammy_amd64.deb
+#      - dpkg -i docker-ce_25.0.3-1~ubuntu.22.04~jammy_amd64.deb
+#      - dpkg -i docker-ce-rootless-extras_25.0.3-1~ubuntu.22.04~jammy_amd64.deb
+#      - dpkg -i docker-compose-plugin_2.24.6-1~ubuntu.22.04~jammy_amd64.deb
+#      - dpkg -i docker-buildx-plugin_0.12.1-1~ubuntu.22.04~jammy_amd64.deb
+#      - systemctl start docker
+#      - systemctl enable docker
+#      - systemctl status docker
+      - docker run hello-world
+#      - echo installing AWS CLI
+#      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscli2.zip"
+#      - unzip -q awscli2.zip
+#      - ./aws/install
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      - #$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
+      - echo Building the Docker image...
+      - IMAGE_REPO_NAME_LOWERCASE=$(echo $IMAGE_REPO_NAME | tr '[:upper:]' '[:lower:]')
+      - IMAGE_TAG_LOWERCASE=$(echo $IMAGE_TAG | tr '[:upper:]' '[:lower:]')
+      - docker build -t $IMAGE_REPO_NAME_LOWERCASE:$IMAGE_TAG_LOWERCASE .
+      - docker tag $IMAGE_REPO_NAME_LOWERCASE:$IMAGE_TAG_LOWERCASE $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME_LOWERCASE:$IMAGE_TAG_LOWERCASE
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME_LOWERCASE:$IMAGE_TAG_LOWERCASE
+
